@@ -17,5 +17,9 @@
     "url": "git+https://github.com/ccoenraets/cors-proxy.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ccoenraets/cors-proxy/issues"
+  },
+  "homepage": "https://github.com/ccoenraets/cors-proxy#readme"
 }
