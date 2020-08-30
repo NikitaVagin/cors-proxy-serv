@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/ccoenraets/cors-proxy/issues"
   },
-  "homepage": "https://github.com/ccoenraets/cors-proxy#readme"
+  "homepage": "https://github.com/ccoenraets/cors-proxy#readme",
+  "devDependencies": {
+    "follow-redirects": "^1.13.0"
+  }
 }

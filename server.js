@@ -1,12 +1,17 @@
+const { https } = require('follow-redirects');
+
 const express = require('express'),
     request = require('request'),
     bodyParser = require('body-parser'),
-    app = express();
+    app = express()
 
 const myLimit = typeof(process.argv[2]) != 'undefined' ? process.argv[2] : '100kb';
 console.log('Using limit: ', myLimit);
 
+
 app.use(bodyParser.json({limit: myLimit}));
+
+
 
 app.all('*', (req, res, next) => {
     // Set CORS headers: allow all origins, methods, and headers: you may want to lock this down in a production environment
@@ -30,20 +35,28 @@ if (req.method === 'OPTIONS') {
     const customHeaders = {
         'Accept': '*/*'
     }
-    //if 
-    const auth = req.header('Authorization') ? {'Authorization' :req.header('Authorization')} : null
+    //if headers have authorization header then add to object 
+    const auth = req.header('Authorization') ? {'Authorization' : req.header('Authorization')} : null
     Object.assign(customHeaders, auth)
 
-
-    // request({ url: targetURL + req.url, method: req.method, json: req.body, headers: {'Authorization': req.header('Authorization')} },
-    request({ url: targetURL, method: req.method, json: req.body, headers: customHeaders },
+    //if the response contains redirect tg 
+    request({ url: targetURL, method: req.method, json: req.body, headers: customHeaders, followRedirect: false },
          (error, response, body) => {
+           if(response.statusCode >= 300 && response.statusCode < 400){
+              request({url: response.headers.location, method: "GET", headers: { 'Accept': '*/*'}}).pipe(res);
+           } else {
+            res.send(body);
+           }
+
         if (error) {
           console.error('error: ' + response.statusCode)
         }
-      }).pipe(res);
+      });
   }
+
+
 });
+
 
 app.set('port', process.env.PORT || 5000);
 
